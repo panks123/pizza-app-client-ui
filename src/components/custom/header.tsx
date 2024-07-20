@@ -3,9 +3,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import Link from 'next/link';
 import { Phone, Pizza, ShoppingBasket } from 'lucide-react';
 import { Button } from '../ui/button';
+import { Tenant } from '@/types';
 
-const Header = () => {
-  return (
+const Header = async () => {
+    const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {
+        next: {
+            revalidate: 3600 // refresh the cache in 1 hour (fetch data after 1 hour)
+        }
+    });
+    const tenants = await tenantsResponse.json();
+    console.log({tenants})
+    return (
     <header className='bg-white'>
         <nav className='container py-5 flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
@@ -20,9 +28,11 @@ const Header = () => {
                         <SelectValue placeholder="Select Restaurant" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="light">Checnnai Outlet</SelectItem>
-                        <SelectItem value="dark">Bandra Outlet</SelectItem>
-                        <SelectItem value="system">Noida Outlet</SelectItem>
+                        {
+                            tenants.data.map((tenant: Tenant) => {
+                                return <SelectItem key={tenant.id} value={String(tenant.id)}>{tenant.name}</SelectItem>
+                            })
+                        }
                     </SelectContent>
                 </Select>
             </div>
