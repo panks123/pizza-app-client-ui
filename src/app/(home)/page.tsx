@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/ProductCard";
+import ProductCard, { Product } from "./components/product-card";
 
 const products: Product[] = [
   {
@@ -72,7 +72,7 @@ export default function Home() {
       </section>
       <section>
         <div className="container">
-          <Tabs defaultValue="pizza" >
+          <Tabs defaultValue="pizza" className="mt-2">
             <TabsList>
               <TabsTrigger value="pizza" className="text-lg">Pizza</TabsTrigger>
               <TabsTrigger value="beverages" className="text-lg">Beverages</TabsTrigger>

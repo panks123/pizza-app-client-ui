@@ -8,15 +8,14 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import ToppingList from "./topping-list";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 
 const ProductCard: React.FC<PropType> = ({ product }) => {
   return (
@@ -54,7 +53,7 @@ const ProductCard: React.FC<PropType> = ({ product }) => {
                 <h3 className="text-xl font-bold">{product.name}</h3>
                 <p className="mt-1">{product.description}</p>
                 <div>
-                  <h4 className="mt-6 mb-0.5 pl-1">Choose size</h4>
+                  <h4 className="mt-6 mb-2 pl-1">Choose size</h4>
                   <RadioGroup
                     defaultValue="small"
                     className="grid grid-cols-3 gap-4"
@@ -105,8 +104,9 @@ const ProductCard: React.FC<PropType> = ({ product }) => {
                     </div>
                   </RadioGroup>
                 </div>
+
                 <div>
-                  <h4 className="mt-6 mb-0.5 pl-1">Choose crust</h4>
+                  <h4 className="mt-6 mb-1 pl-1">Choose crust</h4>
                   <RadioGroup
                     defaultValue="thin"
                     className="grid grid-cols-3 gap-4"
@@ -141,6 +141,14 @@ const ProductCard: React.FC<PropType> = ({ product }) => {
                       </Label>
                     </div>
                   </RadioGroup>
+                </div>
+                <ToppingList/>
+                <div className="flex justify-between items-center mt-8">
+                  <span className="font-semibold">₹689</span>
+                  <Button className="flex gap-2">
+                    <ShoppingCart size={22}/> 
+                    <span>Add to Cart</span>
+                  </Button>
                 </div>
               </div>
             </div>
