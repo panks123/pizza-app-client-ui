@@ -11,8 +11,10 @@ const Header = async () => {
             revalidate: 3600 // refresh the cache in 1 hour (fetch data after 1 hour)
         }
     });
+    if(!tenantsResponse.ok) {
+        throw new Error("Failed to fetch tenants")
+    }
     const tenants = await tenantsResponse.json();
-    console.log({tenants})
     return (
     <header className='bg-white'>
         <nav className='container py-5 flex items-center justify-between'>
