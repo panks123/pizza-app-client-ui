@@ -24,3 +24,20 @@ export type Category = {
     priceConfiguration: PriceConfiguration;
     attributes: Attribute[]
 }
+
+export type ProductAttribute = {
+    name: string;
+    value: string | boolean;
+}
+
+export type Product = {
+    _id: string;
+    name: string;
+    image: string;
+    description: string;
+    categoryId: string;
+    priceConfiguration: PriceConfiguration;
+    attributes: ProductAttribute[]
+    isPublish: boolean;
+    createdAt: string;
+}

@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/product-card";
-import { Category } from "@/types";
+import ProductCard from "./components/product-card";
+import { Category, Product } from "@/types";
 
-const products: Product[] = [
+const products= [
   {
       id: "1",
       name: "Margharita Pizza",
@@ -50,6 +50,7 @@ const products: Product[] = [
 ]
 
 export default async function Home() {
+  // TODO: Make concurrent requests using Promise.all
   const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
     next: {
       revalidate: 3600
@@ -59,7 +60,19 @@ export default async function Home() {
     throw new Error("Unable to fetch categories");
 
   const categories: Category[] = await categoryResponse.json();
-  console.log(categories)
+  
+  // TODO: Add Pagination
+  const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${2}`, { // TODO : Make tenantId dynamic
+    next: {
+      revalidate: 3600
+    }
+  });
+  if(!productsResponse.ok) {
+    throw new Error("Unable to fetch Products")
+  }
+  const products: { data: Product[]}  = await productsResponse.json();
+  console.log(products)
+
   return (
     <>
       <section className="bg-white">
@@ -83,7 +96,7 @@ export default async function Home() {
       </section>
       <section>
         <div className="container">
-          <Tabs defaultValue="pizza" className="mt-2">
+          <Tabs defaultValue={categories[0]._id} className="mt-2">
             <TabsList>
               {
                 categories.map(category => (
@@ -91,16 +104,19 @@ export default async function Home() {
                 ))
               }
             </TabsList>
-            <TabsContent value="pizza">
-              <div className="grid grid-cols-4 gap-4 mt-4">
-                {
-                  products.map((product) => (
-                    <ProductCard product={product} key={product.id} />
-                  ))
-                }
-              </div>
-            </TabsContent>
-            <TabsContent value="beverages">Beverage List</TabsContent>
+            {
+              categories.map((category) => (
+              <TabsContent key={category._id} value={category._id}>
+                <div className="grid grid-cols-4 gap-4 mt-4">
+                  {
+                    products.data.filter(x => x.categoryId === category._id).map((product) => (
+                      <ProductCard product={product} key={product._id} />
+                    ))
+                  }
+                </div>
+              </TabsContent>
+              ))
+            }
           </Tabs>
         </div>
       </section>
