@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils';
+import { Topping } from '@/types';
 import { CircleCheck } from 'lucide-react';
 import Image from 'next/image'
 import React, { useState } from 'react'
 
 const ToppingCard: React.FC<PropType> = ({topping, selectedToppings, handleSelectTopping}) => {
-  const isCurrentSelected = !!selectedToppings.find(x => x.id === topping.id);
+  const isCurrentSelected = !!selectedToppings.find(x => x._id === topping._id);
   return (
     <Button 
       variant={'outline'}
@@ -19,14 +20,6 @@ const ToppingCard: React.FC<PropType> = ({topping, selectedToppings, handleSelec
     </Button>
   )
 }
-
-export type Topping =  {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  isAvailable: boolean;
-};
 
 type PropType = {
   topping: Topping;

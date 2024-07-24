@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Phone, Pizza, ShoppingBasket } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Tenant } from '@/types';
+import CartCounter from './cart-counter';
 
 const Header = async () => {
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {
@@ -43,14 +44,7 @@ const Header = async () => {
                     <li className='hover:text-primary'><Link href={"/"}>Menu</Link></li>
                     <li className='hover:text-primary'><Link href={"/"}>Orders</Link></li>
                 </ul>
-                <div className='relative'>
-                    <Link href="/cart">
-                        <ShoppingBasket className='hover:text-primary'/>
-                    </Link>
-                    <span className='absolute -top-2 -right-4 h-5 w-5 flex items-center justify-center rounded-full bg-primary text-white font-light font-mono'>
-                        6
-                    </span>
-                </div>
+                <CartCounter/>
                 <div className='flex items-center gap-x-1 ml-12'>
                     <Phone size={18}/>
                     <span className='hover:text-primary'>+91-9123446084</span>

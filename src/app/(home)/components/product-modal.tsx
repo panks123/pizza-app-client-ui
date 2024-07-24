@@ -1,15 +1,38 @@
+'use client';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { Product } from "@/types";
+import { Product, Topping } from "@/types";
+
+type ProductConfig = {
+  [key: string]: string;
+}
 
 const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
+    const [chosenConfig, setChosenConfig] = useState<ProductConfig>();
+    const [selctedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
+    const handleSelectTopping = (topping: Topping, action: "check" | "uncheck") => {
+      if(action === "check")
+        setSelectedToppings((prev) => prev.concat(topping));
+      else 
+        setSelectedToppings((prev) => prev.filter(x => x._id !== topping._id))
+    }
+
+    const handleRadioConfigChange = (key: string, value: string) => {
+      setChosenConfig((prev) => ({ ...prev, [key]: value }));
+      console.log({key, value})
+    }
+    console.log({chosenConfig})
+    const handleAddToCart = () => {
+        console.log("Add to Cart")
+    }
   return (
     <Dialog>
       <DialogTrigger
@@ -38,6 +61,10 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
                   <RadioGroup
                     defaultValue={Object.keys(value.availableOptions)[0]}
                     className="grid grid-cols-3 gap-4"
+                    onValueChange={(data) => {
+                      console.log({data})
+                      handleRadioConfigChange(key, data)}
+                    }
                   >
                     {Object.keys(value.availableOptions).map((option) => {
                       return (
@@ -62,10 +89,10 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
               );
             })}
 
-            <ToppingList />
+            <ToppingList selctedToppings={selctedToppings} handleSelectTopping={handleSelectTopping} />
             <div className="flex justify-between items-center mt-8">
               <span className="font-semibold">₹689</span>
-              <Button className="flex gap-2">
+              <Button className="flex gap-2" onClick={handleAddToCart}>
                 <ShoppingCart size={22} />
                 <span>Add to Cart</span>
               </Button>

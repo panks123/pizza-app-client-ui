@@ -1,20 +1,21 @@
-'use client';
-import React from "react";
-import ToppingCard, { Topping } from "./topping-card";
+import { Topping } from "@/types";
+import ToppingCard from "./topping-card";
+import React, { useEffect, useState } from "react";
 
-const toppings = [
-  { id: 1, name: "Chicken", image: "/chicken.png", price: 50, isAvailable: true },
-  { id: 2, name: "Jelepeno", image: "/jelapeno.png", price: 50, isAvailable: true },
-  { id: 3, name: "Mushroom", image: "/mushroom.png", price: 50, isAvailable: true },
-]
-const ToppingList = () => {
-  const [selctedToppings, setSelectedToppings] = React.useState([toppings[0]]);
-  const handleSelectTopping = (topping: Topping, action: "check" | "uncheck") => {
-    if(action === "check")
-      setSelectedToppings((prev) => prev.concat(topping));
-    else 
-      setSelectedToppings((prev) => prev.filter(x => x.id !== topping.id))
-  }
+const ToppingList = ({selctedToppings, handleSelectTopping}: {selctedToppings: Topping[], handleSelectTopping: (topping: Topping, action: "check" | "uncheck") => void}) => {
+  const [toppings, setToppings] = useState<Topping[]>([]);
+  
+  useEffect(() => {
+    const fetchToppings = async () => {
+      const toppingResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=${1}`);
+      if(toppingResponse.ok) {
+        const data: { data: Topping[]} = await toppingResponse.json();
+        setToppings(data.data);
+      }
+    }
+    fetchToppings();
+  }, []);
+
   return (
     <section className="mt-5 ">
       <h4>Extra Toppings</h4>
@@ -23,7 +24,7 @@ const ToppingList = () => {
           toppings.map((topping) => (
             <ToppingCard 
               topping={topping} 
-              key={topping.id} 
+              key={topping._id}
               selectedToppings={selctedToppings}
               handleSelectTopping={handleSelectTopping}
             />

@@ -41,3 +41,11 @@ export type Product = {
     isPublish: boolean;
     createdAt: string;
 }
+
+export type Topping =  {
+    _id: number;
+    name: string;
+    image: string;
+    price: number;
+    isAvailable: boolean;
+};
