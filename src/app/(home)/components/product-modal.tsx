@@ -9,6 +9,8 @@ import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/types";
+import { addToCart, CartItem } from "@/lib/store/features/cart/cart-slice";
+import { useAppDispatch } from "@/lib/store/hooks";
 
 type ProductConfig = {
   [key: string]: string;
@@ -17,6 +19,7 @@ type ProductConfig = {
 const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
     const [chosenConfig, setChosenConfig] = useState<ProductConfig>();
     const [selctedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+    const dispatch = useAppDispatch();
 
     const handleSelectTopping = (topping: Topping, action: "check" | "uncheck") => {
       if(action === "check")
@@ -30,8 +33,16 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
       console.log({key, value})
     }
     console.log({chosenConfig})
-    const handleAddToCart = () => {
+    const handleAddToCart = (product: Product) => {
         console.log("Add to Cart")
+        const cartItem = {
+          product,
+          chosenConfiguration: {
+            priceConfiguration: chosenConfig!,
+            selectedToppings: selctedToppings
+          }
+        }
+        dispatch(addToCart(cartItem));
     }
   return (
     <Dialog>
@@ -92,7 +103,7 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
             <ToppingList selctedToppings={selctedToppings} handleSelectTopping={handleSelectTopping} />
             <div className="flex justify-between items-center mt-8">
               <span className="font-semibold">₹689</span>
-              <Button className="flex gap-2" onClick={handleAddToCart}>
+              <Button className="flex gap-2" onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={22} />
                 <span>Add to Cart</span>
               </Button>
