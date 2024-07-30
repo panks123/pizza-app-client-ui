@@ -17,7 +17,15 @@ type ProductConfig = {
 }
 
 const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
-    const [chosenConfig, setChosenConfig] = useState<ProductConfig>();
+    const defaultConfig = Object.entries(product.priceConfiguration).map(([key, value]) => {
+      return {
+        key,
+        value: Object.keys(value.availableOptions)[0]
+      }
+    }).reduce((acc, curr) => {
+      return { ...acc, [curr.key]: curr.value };
+    }, {});
+    const [chosenConfig, setChosenConfig] = useState<ProductConfig>(defaultConfig);
     const [selctedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
     const dispatch = useAppDispatch();
 
