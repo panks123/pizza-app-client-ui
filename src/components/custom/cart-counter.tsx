@@ -7,7 +7,7 @@ import React from "react";
 
 const CartCounter = () => {
     const dispatch = useAppDispatch();
-    const {value} = useAppSelector((state) => state.cart)
+    const {cartItems} = useAppSelector((state) => state.cart)
     const handleIncrement = () => {
         dispatch(increment());
     }
@@ -17,11 +17,13 @@ const CartCounter = () => {
         <Link href="/cart">
             <ShoppingBasket className="hover:text-primary" />
         </Link>
-        <span className="absolute -top-2 -right-4 h-5 w-5 flex items-center justify-center rounded-full bg-primary text-white font-light font-mono">
-            {value}
-        </span>
+        {
+            cartItems.length > 0 &&
+            <span className="absolute -top-2 -right-4 h-5 w-5 flex items-center justify-center rounded-full bg-primary text-white font-light font-mono">
+                {cartItems.length}
+            </span>
+        }
         </div>
-        <button onClick={handleIncrement}>Increment</button>
     </>
   );
 };
