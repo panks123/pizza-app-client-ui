@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { Phone, Pizza, ShoppingBasket } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Tenant } from '@/types';
-import CartCounter from './cart-counter';
+import dynamic from 'next/dynamic';
+// import CartCounter from './cart-counter';
+const CartCounter = dynamic(() => import('./cart-counter'), {ssr: false});
 
 const Header = async () => {
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {

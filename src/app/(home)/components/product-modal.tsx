@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
@@ -52,6 +52,17 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
         }
         dispatch(addToCart(cartItem));
     }
+    const totalPrice = useMemo(() => {
+      const toppingsTotal = selctedToppings.reduce((acc, curr) => {
+        return acc + curr.price;
+      }, 0);
+      const configTotal = Object.entries(chosenConfig).reduce((acc, [key, value]) => {
+        const price = product.priceConfiguration[key].availableOptions[value];
+        return acc + price;
+      }, 0);
+      return toppingsTotal + configTotal;
+    }, [selctedToppings, chosenConfig, product]);
+
   return (
     <Dialog>
       <DialogTrigger
@@ -110,7 +121,7 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
 
             <ToppingList selctedToppings={selctedToppings} handleSelectTopping={handleSelectTopping} />
             <div className="flex justify-between items-center mt-8">
-              <span className="font-semibold">₹689</span>
+              <span className="font-semibold">₹{totalPrice}</span>
               <Button className="flex gap-2" onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={22} />
                 <span>Add to Cart</span>

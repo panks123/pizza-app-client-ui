@@ -10,6 +10,14 @@ export type PriceConfiguration = {
         availableOptions: string[];
     }
 }
+export type ProductPriceConfiguration = {
+    [key: string] : {
+        priceType: 'base' | 'aditional';
+        availableOptions: {
+            [key: string] : number;
+        };
+    }
+}
 
 export type Attribute = {
     name: string;
@@ -36,7 +44,7 @@ export type Product = {
     image: string;
     description: string;
     categoryId: string;
-    priceConfiguration: PriceConfiguration;
+    priceConfiguration: ProductPriceConfiguration;
     attributes: ProductAttribute[]
     isPublish: boolean;
     createdAt: string;
