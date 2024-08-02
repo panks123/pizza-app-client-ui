@@ -52,7 +52,7 @@ const ProductList = async () => {
             <TabsContent key={category._id} value={category._id}>
               <div className="grid grid-cols-4 gap-4 mt-4">
                 {products.data
-                  .filter((x) => x.categoryId === category._id)
+                  .filter((x) => x.category?._id === category._id)
                   .map((product) => (
                     <ProductCard product={product} key={product._id} />
                   ))}
