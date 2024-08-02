@@ -30,7 +30,8 @@ export type Category = {
     _id: string;
     name: string;
     priceConfiguration: PriceConfiguration;
-    attributes: Attribute[]
+    attributes: Attribute[];
+    hasToppings: boolean;
 }
 
 export type ProductAttribute = {
@@ -44,6 +45,7 @@ export type Product = {
     image: string;
     description: string;
     categoryId: string;
+    category?: Category;
     priceConfiguration: ProductPriceConfiguration;
     attributes: ProductAttribute[]
     isPublish: boolean;

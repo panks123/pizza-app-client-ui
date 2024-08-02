@@ -118,8 +118,10 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
                 </div>
               );
             })}
-
+            {
+              product.category?.hasToppings &&
             <ToppingList selctedToppings={selctedToppings} handleSelectTopping={handleSelectTopping} />
+            }
             <div className="flex justify-between items-center mt-8">
               <span className="font-semibold">₹{totalPrice}</span>
               <Button className="flex gap-2" onClick={() => handleAddToCart(product)}>
