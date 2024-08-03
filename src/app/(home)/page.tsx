@@ -4,7 +4,7 @@ import ProductList from "./components/product-list";
 import { Suspense } from "react";
 import ProductListSkeleton from "./components/skeletons/product-list-skeleton";
 
-export default async function Home() {
+export default async function Home({searchParams}: {searchParams: {tenantId: string}}) {
   
   return (
     <>
@@ -23,12 +23,12 @@ export default async function Home() {
             </Button>
           </div>
           <div>
-            <Image alt="Pizzo-Moto" src={"/pizza-main.png"} width={360} height={360}/>
+            <Image alt="Pizzo-Moto" src={"/pizza-main.png"} width={360} height={360} />
           </div>
         </div>
       </section>
       <Suspense fallback={<ProductListSkeleton/>}>
-        <ProductList/>
+        <ProductList searchParams={searchParams} />
       </Suspense>
     </>
   );

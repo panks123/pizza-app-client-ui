@@ -1,11 +1,9 @@
 import React from 'react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import Link from 'next/link';
-import { Phone, Pizza, ShoppingBasket } from 'lucide-react';
+import { Phone, Pizza } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Tenant } from '@/types';
 import dynamic from 'next/dynamic';
-// import CartCounter from './cart-counter';
+import TenantSelect from './tenant-select';
 const CartCounter = dynamic(() => import('./cart-counter'), {ssr: false});
 
 const Header = async () => {
@@ -28,18 +26,7 @@ const Header = async () => {
                     </div>
                     <span className='font-black text-primary'>PizzoMoto</span>
                 </div>
-                <Select>
-                    <SelectTrigger className="w-[180px] focus:ring-0">
-                        <SelectValue placeholder="Select Restaurant" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {
-                            tenants.data.map((tenant: Tenant) => {
-                                return <SelectItem key={tenant.id} value={String(tenant.id)}>{tenant.name}</SelectItem>
-                            })
-                        }
-                    </SelectContent>
-                </Select>
+                <TenantSelect tenants={tenants}/>
             </div>
             <div className='flex items-center gap-4'>
                 <ul className='flex items-center font-medium space-x-4'>

@@ -1,10 +1,12 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "./product-card";
 import { Category, Product } from "@/types";
 
-const ProductList = async () => {
+const ProductList = async ({searchParams}: {searchParams: {tenantId: string}}) => {
   // TODO: Make concurrent requests using Promise.all
+  console.log("searchParams=>>", searchParams)
+  console.log("TenantId=>>", searchParams.tenantId) 
   const categoryResponse = await fetch(
     `${process.env.BACKEND_URL}/api/catalog/categories`,
     {
@@ -19,7 +21,7 @@ const ProductList = async () => {
 
   // TODO: Add Pagination
   const productsResponse = await fetch(
-    `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${2}`,
+    `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${searchParams.tenantId}`,
     {
       // TODO : Make tenantId dynamic
       next: {
@@ -31,7 +33,6 @@ const ProductList = async () => {
     throw new Error("Unable to fetch Products");
   }
   const products: { data: Product[] } = await productsResponse.json();
-  console.log(products);
 
   return (
     <section>
