@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/types";
 import { addToCart, CartItem } from "@/lib/store/features/cart/cart-slice";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { hashCartItems } from "@/lib/utils";
 
 type ProductConfig = {
   [key: string]: string;
@@ -26,9 +27,10 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
       return { ...acc, [curr.key]: curr.value };
     }, {});
     const [chosenConfig, setChosenConfig] = useState<ProductConfig>(defaultConfig);
-    const [selctedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+    const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const dispatch = useAppDispatch();
-
+    const cartItems = useAppSelector(state => state.cart.cartItems);
     const handleSelectTopping = (topping: Topping, action: "check" | "uncheck") => {
       if(action === "check")
         setSelectedToppings((prev) => prev.concat(topping));
@@ -38,22 +40,25 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
 
     const handleRadioConfigChange = (key: string, value: string) => {
       setChosenConfig((prev) => ({ ...prev, [key]: value }));
-      console.log({key, value})
     }
-    console.log({chosenConfig})
     const handleAddToCart = (product: Product) => {
-        console.log("Add to Cart")
-        const cartItem = {
-          product,
+        const cartItem: CartItem = {
+          _id: product._id,
+          name: product.name,
+          image: product.image,
+          priceConfiguration: product.priceConfiguration, 
           chosenConfiguration: {
             priceConfiguration: chosenConfig!,
-            selectedToppings: selctedToppings
-          }
+            selectedToppings: selectedToppings,
+          },
+          qty: 1,
         }
         dispatch(addToCart(cartItem));
+        setSelectedToppings([]);
+        setDialogOpen(false);
     }
     const totalPrice = useMemo(() => {
-      const toppingsTotal = selctedToppings.reduce((acc, curr) => {
+      const toppingsTotal = selectedToppings.reduce((acc, curr) => {
         return acc + curr.price;
       }, 0);
       const configTotal = Object.entries(chosenConfig).reduce((acc, [key, value]) => {
@@ -61,10 +66,28 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
         return acc + price;
       }, 0);
       return toppingsTotal + configTotal;
-    }, [selctedToppings, chosenConfig, product]);
+    }, [selectedToppings, chosenConfig, product]);
+
+
+    const presentInCart = useMemo(() => {
+      const configuration = {
+        _id: product._id,
+        name: product.name,
+        image: product.image,
+        priceConfiguration: product.priceConfiguration,
+        chosenConfiguration: {
+          priceConfiguration: {...chosenConfig},
+          selectedToppings: selectedToppings,
+        },
+        qty: 1
+      }
+
+      const hash = hashCartItems(configuration);
+      return cartItems.some(x => x.hash === hash)
+    }, [product, chosenConfig, selectedToppings, cartItems])
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger
         className="bg-orange-200 hover:bg-orange-300 text-orange-600 hover:text-orange-700 px-6 py-2 rounded-full 
             shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
@@ -92,7 +115,6 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
                     defaultValue={Object.keys(value.availableOptions)[0]}
                     className="grid grid-cols-3 gap-4"
                     onValueChange={(data) => {
-                      console.log({data})
                       handleRadioConfigChange(key, data)}
                     }
                   >
@@ -120,13 +142,17 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
             })}
             {
               product.category?.hasToppings &&
-            <ToppingList selctedToppings={selctedToppings} handleSelectTopping={handleSelectTopping} />
+            <ToppingList selectedToppings={selectedToppings} handleSelectTopping={handleSelectTopping} />
             }
             <div className="flex justify-between items-center mt-8">
               <span className="font-semibold">₹{totalPrice}</span>
-              <Button className="flex gap-2" onClick={() => handleAddToCart(product)}>
+              <Button 
+                className={`flex gap-2 ${presentInCart ? "bg-gray-700" : "bg-primary"}`}
+                disabled={presentInCart}
+                onClick={() => handleAddToCart(product)}
+              >
                 <ShoppingCart size={22} />
-                <span>Add to Cart</span>
+                <span>{presentInCart ? "Already in Cart" : "Add to Cart"}</span>
               </Button>
             </div>
           </div>

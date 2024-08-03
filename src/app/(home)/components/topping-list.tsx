@@ -2,7 +2,7 @@ import { Topping } from "@/types";
 import ToppingCard from "./topping-card";
 import React, { useEffect, useState } from "react";
 
-const ToppingList = ({selctedToppings, handleSelectTopping}: {selctedToppings: Topping[], handleSelectTopping: (topping: Topping, action: "check" | "uncheck") => void}) => {
+const ToppingList = ({selectedToppings, handleSelectTopping}: {selectedToppings: Topping[], handleSelectTopping: (topping: Topping, action: "check" | "uncheck") => void}) => {
   const [toppings, setToppings] = useState<Topping[]>([]);
   
   useEffect(() => {
@@ -25,7 +25,7 @@ const ToppingList = ({selctedToppings, handleSelectTopping}: {selctedToppings: T
             <ToppingCard 
               topping={topping} 
               key={topping._id}
-              selectedToppings={selctedToppings}
+              selectedToppings={selectedToppings}
               handleSelectTopping={handleSelectTopping}
             />
           ))
