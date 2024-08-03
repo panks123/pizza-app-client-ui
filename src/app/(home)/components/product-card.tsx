@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import { Product } from "@/types";
 import ProductModal from "./product-modal";
+import { getFromDisplayPrice } from "@/lib/utils";
 
 const ProductCard: React.FC<PropType> = ({ product }) => {
   return (
@@ -22,7 +23,7 @@ const ProductCard: React.FC<PropType> = ({ product }) => {
       <CardFooter className="flex items-center justify-between">
         <p>
           <span>From </span>
-          <span className="font-bold"> ₹100</span>
+          <span className="font-bold"> ₹{getFromDisplayPrice(product)}</span>
         </p>
         <ProductModal product={product}/>
       </CardFooter>

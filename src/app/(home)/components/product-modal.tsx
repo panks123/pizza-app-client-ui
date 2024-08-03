@@ -7,11 +7,12 @@ import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { CircleCheck, ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/types";
 import { addToCart, CartItem } from "@/lib/store/features/cart/cart-slice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { hashCartItems } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 type ProductConfig = {
   [key: string]: string;
@@ -26,6 +27,7 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
     }).reduce((acc, curr) => {
       return { ...acc, [curr.key]: curr.value };
     }, {});
+    const {toast} = useToast();
     const [chosenConfig, setChosenConfig] = useState<ProductConfig>(defaultConfig);
     const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -56,6 +58,11 @@ const ProductModal: React.FC<{ product: Product }> = ({ product }) => {
         dispatch(addToCart(cartItem));
         setSelectedToppings([]);
         setDialogOpen(false);
+        toast({
+          // @ts-ignore
+          title: <div className="flex items-center gap-2"><CircleCheck size={20} className="text-primary"/><span>Added to Cart</span></div>,
+          duration: 1500
+        })
     }
     const totalPrice = useMemo(() => {
       const toppingsTotal = selectedToppings.reduce((acc, curr) => {
