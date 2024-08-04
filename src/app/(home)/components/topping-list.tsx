@@ -21,22 +21,22 @@ const ToppingList = ({selectedToppings, handleSelectTopping}: {selectedToppings:
 
   return (
     <section className="mt-5 ">
-      <div className="grid grid-cols-3 gap-2 mt-2">
-        {toppings.length > 0 && <>
-          <h4>Extra Toppings</h4>
-          {
-            toppings.map((topping) => (
-              <ToppingCard 
-                topping={topping} 
-                key={topping._id}
-                selectedToppings={selectedToppings}
-                handleSelectTopping={handleSelectTopping}
-              />
-            ))
-          }
-        </>
-        }
-      </div>
+    {toppings.length > 0 && <>
+      <h4>Extra Toppings</h4>
+        <div className="grid grid-cols-3 gap-2 mt-2">
+            {
+              toppings.map((topping) => (
+                <ToppingCard 
+                  topping={topping} 
+                  key={topping._id}
+                  selectedToppings={selectedToppings}
+                  handleSelectTopping={handleSelectTopping}
+                />
+              ))
+            }
+        </div>
+      </>
+    }
     </section>
   )
 }

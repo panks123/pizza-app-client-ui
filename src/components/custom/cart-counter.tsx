@@ -1,16 +1,17 @@
 'use client';
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import React from "react";
+import { useAppSelector } from "@/lib/store/hooks";
 import { ShoppingBasket } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useSearchParams } from "next/navigation";
 
 const CartCounter = () => {
-    const dispatch = useAppDispatch();
-    const {cartItems} = useAppSelector((state) => state.cart)
+    const {cartItems} = useAppSelector((state) => state.cart);
+    const searchParams = useSearchParams();
   return (
     <>
         <div className="relative">
-        <Link href="/cart">
+        <Link href={`/cart?tenantId=${searchParams.get('tenantId')}`}>
             <ShoppingBasket className="hover:text-primary" />
         </Link>
         {

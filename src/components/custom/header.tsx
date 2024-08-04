@@ -4,6 +4,7 @@ import { Phone, Pizza } from 'lucide-react';
 import { Button } from '../ui/button';
 import dynamic from 'next/dynamic';
 import TenantSelect from './tenant-select';
+import StoreLogo from './store-logo';
 const CartCounter = dynamic(() => import('./cart-counter'), {ssr: false});
 
 const Header = async () => {
@@ -20,12 +21,7 @@ const Header = async () => {
     <header className='bg-white'>
         <nav className='container py-5 flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
-                <div className='flex items-center gap-2 bg-[#3b2323fc] p-0 pr-2 rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px]'>
-                    <div className='border-primary border-2 p-1.5 rounded-full'>
-                        <Pizza className='text-primary'/>
-                    </div>
-                    <span className='font-black text-primary'>PizzoMoto</span>
-                </div>
+                <StoreLogo/>
                 <TenantSelect tenants={tenants}/>
             </div>
             <div className='flex items-center gap-4'>
