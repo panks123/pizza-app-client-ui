@@ -19,12 +19,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useCalculateItemTotal } from "@/lib/hooks/use-calculate-total";
 
 const CartItem: React.FC<{ item: CartItemType }> = ({ item }) => {
   const dispatch = useAppDispatch();
   const handleQtyChange = (changer: number) => {
     dispatch(changeItemQty({ hash: item.hash!, changer }));
   };
+  const totalItemPrice = useCalculateItemTotal(item);
   return (
     <>
       <div className="grid grid-cols-2">
@@ -53,10 +55,13 @@ const CartItem: React.FC<{ item: CartItemType }> = ({ item }) => {
             </QtyChanger>
           </div>
           <div className="flex">
-            <div className="font-bold">₹{300}</div>
+            <div>
+                <p className="font-bold">₹{item.qty * totalItemPrice}</p>
+                <p className="text-gray-500 text-sm">{item.qty} x ₹{totalItemPrice}</p>
+            </div>
             <AlertDialog>
-              <AlertDialogTrigger>
-                <X />
+              <AlertDialogTrigger className="ml-6">
+                <X className="text-red-500" />
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>

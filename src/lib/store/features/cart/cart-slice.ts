@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface CartItem extends Pick<Product, '_id' | 'name' | 'image' | 'priceConfiguration'> {
-  // product: Pick<Product, '_id' | 'name' | 'image' | 'priceConfiguration'>; 
   chosenConfiguration: {
     priceConfiguration: {
       [key: string]: string; 

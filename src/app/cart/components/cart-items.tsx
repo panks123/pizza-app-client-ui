@@ -1,20 +1,28 @@
 'use client';
-import React, { useEffect } from 'react'
-import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useMemo } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppSelector } from '@/lib/store/hooks';
 import { ArrowRight, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import CartItem from './cart-item';
 import { Button } from '@/components/ui/button';
+import { getItemTotalPrice } from '@/lib/utils';
 
 const CartItems = () => {
     const searchParams = useSearchParams();
     const [isClient, setIsClient] = React.useState(false);
+    const router = useRouter();
     useEffect(() => {
       setIsClient(true)
     }, []);
 
     const cart =  useAppSelector(state => state.cart.cartItems);
+
+    const finalCartTotal = useMemo(() => {
+        return cart.reduce((acc, curr) => {
+            return acc + curr.qty * getItemTotalPrice(curr);
+        }, 0)
+    }, [cart]);
     if(!isClient) return null;
 
     if(!cart.length) {
@@ -37,8 +45,8 @@ const CartItems = () => {
         ))
       }
       <div className='flex items-center justify-between gap-2'>
-        <span className='font-bold text-xl'>Total: ₹{4000}</span>
-        <Button>
+        <span className='font-bold text-xl'>Total: ₹{finalCartTotal}</span>
+        <Button onClick={() => router.push(`/checkout?tenantId=${searchParams.get('tenantId')}`)}>
             Checkout
             <ArrowRight className='ml-2'/>
         </Button>

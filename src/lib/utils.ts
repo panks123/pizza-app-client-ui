@@ -23,3 +23,16 @@ export function getFromDisplayPrice(product: Product) {
   }, 0);
   return basePrice;
 }
+
+export function getItemTotalPrice(item: CartItem) {
+  const { priceConfiguration, chosenConfiguration} = item;
+  const {selectedToppings} = chosenConfiguration;
+  const toppingsTotal = selectedToppings.reduce((acc, curr) => {
+    return acc + curr.price;
+  }, 0);
+  const configTotal = Object.entries(chosenConfiguration.priceConfiguration).reduce((acc, [key, value]) => {
+    const price = priceConfiguration[key].availableOptions[value];
+    return acc + price;
+  }, 0);
+  return toppingsTotal + configTotal;
+}
