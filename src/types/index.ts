@@ -59,3 +59,12 @@ export type Topping =  {
     price: number;
     isAvailable: boolean;
 };
+
+export interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: 'admin' | 'customer' | 'mananger';
+    tenantId: number | null;
+}

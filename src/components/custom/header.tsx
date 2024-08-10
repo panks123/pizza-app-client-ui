@@ -5,9 +5,13 @@ import { Button } from '../ui/button';
 import dynamic from 'next/dynamic';
 import TenantSelect from './tenant-select';
 import StoreLogo from './store-logo';
+import { getSession } from '@/lib/session';
+import Logout from './logout';
 const CartCounter = dynamic(() => import('./cart-counter'), {ssr: false});
 
 const Header = async () => {
+    const session = await getSession();
+    console.log({session});
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {
         next: {
             revalidate: 3600 // refresh the cache in 1 hour (fetch data after 1 hour)
@@ -34,7 +38,13 @@ const Header = async () => {
                     <Phone size={18}/>
                     <span className='hover:text-primary'>+91-9123446084</span>
                 </div>
-                <Button size={'sm'}>Logout</Button>
+                {
+                    session ? 
+                    <Logout /> :
+                    <Button size={'sm'} asChild>
+                        <Link href={"/login"}>Login</Link>
+                    </Button>
+                }
             </div>
         </nav>
     </header>
