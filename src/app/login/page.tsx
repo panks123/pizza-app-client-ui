@@ -1,6 +1,5 @@
 'use client';
 import React from 'react'
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import login from '@/lib/actions/login';
@@ -13,10 +12,11 @@ const initialState = {
     message: '',
 }
 
-const Login = () => {
+const Login = ({searchParams}: {searchParams: { tenantId : string}}) => {
+    const qs = new URLSearchParams(searchParams).toString();
     const [state, formAction] = useFormState(login, initialState);
     if(state.type === 'success') {
-        window.location.href = '/';
+        window.location.href = `/?${qs}`;
     }
   return (
     // <div className='w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]'>

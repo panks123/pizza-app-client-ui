@@ -18,10 +18,11 @@ import { redirect } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const Checkout = async () => {
+const Checkout: React.FC<{searchParams: { tenantId : string}}> = async ({searchParams}) => {
+  const qs = new URLSearchParams(searchParams).toString();
   const session = await getSession();
   if (!session) {
-    redirect("/login");
+    redirect(`/login?${qs}`);
   }
   return (
     <div className="flex container gap-6 mt-16">
