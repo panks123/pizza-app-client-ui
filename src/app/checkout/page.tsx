@@ -19,10 +19,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const Checkout: React.FC<{searchParams: { tenantId : string}}> = async ({searchParams}) => {
-  const qs = new URLSearchParams(searchParams).toString();
+  const sParams = new URLSearchParams(searchParams);
+  const existingQS = sParams.toString();
+  
+  sParams.append("returnTo", `checkout?${existingQS}`)
   const session = await getSession();
   if (!session) {
-    redirect(`/login?${qs}`);
+    redirect(`/login?${sParams}`);
   }
   return (
     <div className="flex container gap-6 mt-16">

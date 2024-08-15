@@ -7,11 +7,11 @@ import TenantSelect from './tenant-select';
 import StoreLogo from './store-logo';
 import { getSession } from '@/lib/session';
 import Logout from './logout';
+import LoginBtn from './login-btn';
 const CartCounter = dynamic(() => import('./cart-counter'), {ssr: false});
 
 const Header = async () => {
     const session = await getSession();
-    console.log({session});
     const tenantsResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`, {
         next: {
             revalidate: 3600 // refresh the cache in 1 hour (fetch data after 1 hour)
@@ -40,10 +40,8 @@ const Header = async () => {
                 </div>
                 {
                     session ? 
-                    <Logout /> :
-                    <Button size={'sm'} asChild>
-                        <Link href={"/login"}>Login</Link>
-                    </Button>
+                    <Logout /> : 
+                    <LoginBtn />
                 }
             </div>
         </nav>

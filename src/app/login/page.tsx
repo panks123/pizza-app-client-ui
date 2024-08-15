@@ -13,10 +13,11 @@ const initialState = {
 }
 
 const Login = ({searchParams}: {searchParams: { tenantId : string}}) => {
-    const qs = new URLSearchParams(searchParams).toString();
+    const qs = new URLSearchParams(searchParams);
     const [state, formAction] = useFormState(login, initialState);
     if(state.type === 'success') {
-        window.location.href = `/?${qs}`;
+        const returnTo = qs.get('returnTo');
+        window.location.href = returnTo ? returnTo : '/';
     }
   return (
     // <div className='w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]'>
