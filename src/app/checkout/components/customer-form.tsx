@@ -16,9 +16,32 @@ import { Label } from "@/components/ui/label";
 import { Coins, CreditCard, PlusIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useQuery } from "@tanstack/react-query";
+import { getCustomer } from "@/lib/http/api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CustomerForm = () => {
-  return (
+    const {data: customer, isLoading} = useQuery({
+        queryKey: ['customer'],
+        queryFn: async () => {
+          return await getCustomer().then(res => res.data);
+        }
+    })
+    if(isLoading) return <div className="flex container gap-6 mt-16">
+      <Card className="w-3/5 border-none">
+        <CardHeader>
+          <Skeleton className="w-1/3 h-12" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <div className="flex items-center space-x-2">
+            <Skeleton className="w-1/2 h-20" />
+            <Skeleton className="w-1/2 h-20" />
+          </div>
+        </CardHeader>
+      </Card>
+    </div>
+    return (
     <div className="flex container gap-6 mt-16">
       <Card className="w-3/5 border-none">
         <CardHeader>
@@ -32,7 +55,8 @@ const CustomerForm = () => {
                 id="fname"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.firstName}
+                disabled
               />
             </div>
             <div className="grid gap-3">
@@ -41,7 +65,8 @@ const CustomerForm = () => {
                 id="lname"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.lastName}
+                disabled
               />
             </div>
             <div className="grid gap-3">
@@ -50,7 +75,8 @@ const CustomerForm = () => {
                 id="email"
                 type="text"
                 className="w-full"
-                defaultValue=""
+                defaultValue={customer?.email}
+                disabled
               />
             </div>
             <div className="grid gap-3">
