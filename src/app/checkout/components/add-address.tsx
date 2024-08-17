@@ -46,8 +46,11 @@ const AddAddress: React.FC<{customerId: string}> = ({customerId}) => {
     }
   })
 
-  const handleSubmit = (data: z.infer<typeof FormSchema>) => { 
-    mutate(data);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => { 
+    e.stopPropagation();
+    addAddressForm.handleSubmit((data: z.infer<typeof FormSchema>) => {
+      mutate(data);
+    })(e);
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,7 +62,7 @@ const AddAddress: React.FC<{customerId: string}> = ({customerId}) => {
       </DialogTrigger>
       <DialogContent>
         <Form {...addAddressForm}>
-          <form onSubmit={addAddressForm.handleSubmit(handleSubmit)}>
+          <form onSubmit={handleSubmit}>
             <DialogHeader>
               <DialogTitle>Add Address</DialogTitle>
               <DialogDescription>

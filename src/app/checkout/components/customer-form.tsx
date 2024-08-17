@@ -21,7 +21,6 @@ import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Customer } from "@/types";
 import AddAddress from "./add-address";
-import { Fascinate_Inline } from "next/font/google";
 import { Button } from "@/components/ui/button";
 
 const CustomerForm = () => {
