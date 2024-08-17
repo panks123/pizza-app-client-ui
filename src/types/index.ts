@@ -68,3 +68,16 @@ export interface User {
     role: 'admin' | 'customer' | 'mananger';
     tenantId: number | null;
 }
+
+export type Address = {
+    text: string;
+    isDefault: boolean;
+}
+
+export type Customer = {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    addresses: Address[];
+}

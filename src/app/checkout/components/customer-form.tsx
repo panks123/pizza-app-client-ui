@@ -1,27 +1,19 @@
 'use client';
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Coins, CreditCard, PlusIcon } from "lucide-react";
+import { Coins, CreditCard } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useQuery } from "@tanstack/react-query";
 import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Customer } from "@/types";
+import AddAddress from "./add-address";
 
 const CustomerForm = () => {
-    const {data: customer, isLoading} = useQuery({
+    const {data: customer, isLoading} = useQuery<Customer>({
         queryKey: ['customer'],
         queryFn: async () => {
           return await getCustomer().then(res => res.data);
@@ -83,53 +75,25 @@ const CustomerForm = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="name">Address</Label>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size={"sm"} variant={"link"}>
-                        <PlusIcon size={16} />
-                        <span className="ml-2">Add New Address</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Add Address</DialogTitle>
-                        <DialogDescription>
-                          We can save your address for future orders.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div>
-                          <Label htmlFor="address">Address</Label>
-                          <Textarea className="mt-2" />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit">Save Changes</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  {
+                    customer && 
+                    <AddAddress customerId={customer._id} />
+                  }
                 </div>
                 <RadioGroup
                   defaultValue="option-one"
                   className="grid grid-cols-2 gap-6 mt-2"
                 >
-                  <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-one" id="option-one" />
-                      <Label htmlFor="option-one" className="leading-normal">
-                        123, Abc Street, New York, NY 10001 United States
-                      </Label>
-                    </div>
-                  </Card>
-                  <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="option-two" id="option-two" />
-                      <Label htmlFor="option-two" className="leading-normal">
-                        Flat No. 11, Sunshine Avenue, Mumbai, Andheri East
-                        Mumbai Maharashtra, India - 110011
-                      </Label>
-                    </div>
-                  </Card>
+                  {
+                    customer?.addresses.map((address) => (<Card key={address.text} className="p-6">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value={"option-one"} id={"option-one"} />
+                        <Label htmlFor={"option-one"} className="leading-normal">
+                          {address.text}
+                        </Label>
+                      </div>
+                    </Card>))
+                  }
                 </RadioGroup>
               </div>
             </div>
