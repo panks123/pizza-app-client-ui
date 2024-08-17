@@ -13,7 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Coins, CreditCard, LoaderCircle } from "lucide-react";
+import { Coins, CreditCard } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Customer } from "@/types";
 import AddAddress from "./add-address";
-import { Button } from "@/components/ui/button";
+import OrderSummary from "./order-summary";
 
 const CustomerForm = () => {
   const FormSchema = z.object({
@@ -220,81 +220,7 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="w-2/5 border-none h-auto self-start">
-            <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
-              <CardContent className="grid gap-4 pt-6">
-                <div className="flex items-center justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-bold">₹{900}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Taxes</span>
-                  <span className="font-bold">₹{10}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Delivery charges</span>
-                  <span className="font-bold">₹{50}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Discount</span>
-                  <span className="font-bold">₹{20}</span>
-                </div>
-                <hr />
-                <div className="flex items-center justify-between">
-                  <span className="font-bold">Order total</span>
-                  <span className="font-bold flex flex-col items-end">
-                    <span
-                      className={
-                        // discountPercentage ? "line-through text-gray-400" : ""
-                        "line-through text-gray-400"
-                      }
-                    >
-                      ₹{950}
-                    </span>
-                    {/* {discountPercentage ? ( */}
-                    {true ? (
-                      <span className="text-green-700">
-                        ₹{890}
-                      </span>
-                    ) : null}
-                  </span>
-                </div>
-                {/* {discountError && <div className="text-red-500">{discountError}</div>} */}
-                {false && <div className="text-red-500">{"Error"}</div>}
-                <div className="flex items-center gap-4">
-                    <Input
-                        id="coupon"
-                        name="code"
-                        type="text"
-                        className="w-full"
-                        placeholder="Coupon code"
-                        // ref={couponCodeRef}
-                    />
-                    {/* todo: add loading */}
-                    {/* <Button onClick={handleCouponValidation} variant={'outline'}> */}
-                    <Button variant={'outline'}>
-                        Apply
-                    </Button>
-                </div>
-
-                <div className="text-right mt-6">
-                    {/* <Button disabled={isPlaceOrderPending}> */}
-                    <Button disabled={false}>
-                        {/* {isPlaceOrderPending ? ( */}
-                        {false ? (
-                            <span className="flex items-center gap-2">
-                                <LoaderCircle className="animate-spin" />
-                                <span>Please wait...</span>
-                            </span>
-                        ) : (
-                            <span>Place order</span>
-                        )}
-                    </Button>
-                </div>
-              </CardContent>
-            </CardHeader>
-          </Card>
+          <OrderSummary />
         </div>
       </form>
     </Form>
