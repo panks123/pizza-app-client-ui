@@ -13,4 +13,4 @@ const ORDER_SERVICE = '/api/order';
 
 export const getCustomer = () => api.get(`${ORDER_SERVICE}/customer`);
 export const addAddress = (customerId: string, payload: { address: string }) => api.patch(`${ORDER_SERVICE}/customer/addresses/${customerId}`, payload);
-
+export const validateCoupon = (payload: { code: string, tenantId: number }) => api.post(`${ORDER_SERVICE}/coupon/verify`, payload);
