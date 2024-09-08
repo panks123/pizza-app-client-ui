@@ -21,9 +21,13 @@ import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Customer } from "@/types";
 import AddAddress from "./add-address";
-import OrderSummary from "./order-summary";
+import OrderSummary, { OrderSummaryHandle } from "./order-summary";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useSearchParams } from "next/navigation";
 
 const CustomerForm = () => {
+  const orderSummaryRef = React.useRef<OrderSummaryHandle>(null);
+  const searchParams = useSearchParams();
   const FormSchema = z.object({
     address: z.string({ required_error: "Please select an address" }),
     paymentMode: z.enum(["card", "cash"], {
@@ -34,6 +38,9 @@ const CustomerForm = () => {
   const customerForm = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
+
+  const cart = useAppSelector(state => state.cart);
+
   const { data: customer, isLoading } = useQuery<Customer>({
     queryKey: ["customer"],
     queryFn: async () => {
@@ -42,7 +49,21 @@ const CustomerForm = () => {
   });
 
   const handleSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("Data::", data);
+    const tenantId = searchParams.get("tenantId");
+    if(!tenantId) {
+      alert("Please select a Restaurant"); // Todo: Add toast
+      return;
+    }
+    const orderData = {
+      cart: cart.cartItems,
+      couponCode: orderSummaryRef.current ? orderSummaryRef.current.getAppliedCouponCode() : "",
+      tenantId,
+      customerId: customer?._id,
+      comment: data.comment,
+      address: data.address,
+      paymentMode: data.paymentMode
+    }
+    console.log("OrderData::", orderData);
   };
 
   if (isLoading)
@@ -220,7 +241,7 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
-          <OrderSummary />
+          <OrderSummary ref={orderSummaryRef} />
         </div>
       </form>
     </Form>

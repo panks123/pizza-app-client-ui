@@ -14,7 +14,11 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 const TAX_PERCENTAGE = 5;  // TODO: Move to server
 const DELIVERY_CHARGES = 50;  // TODO: Move to server
 
-const OrderSummary = () => {
+export interface OrderSummaryHandle {
+  getAppliedCouponCode: () => string;
+}
+
+const OrderSummary = React.forwardRef<OrderSummaryHandle>((props, ref) => {
     const [discountPercentage, setDiscountPercentage] = React.useState({ code: "", discount: 0 });
     const [discountError, setDiscountError] = React.useState("");
     const couponCodeRef = React.useRef<HTMLInputElement>(null);
@@ -76,9 +80,19 @@ const OrderSummary = () => {
 
     const handleCouponValidate = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        if(couponCodeRef.current?.value && couponCodeRef.current.value === discountPercentage.code) {
+          console.log("Coupon code is same as applied coupon code");
+          return;
+        }
         mutate();
     }
-    console.log("DISCOUNT ERROR", discountError);
+
+    React.useImperativeHandle(ref, () => ({
+        getAppliedCouponCode: () => {
+            return discountPercentage.code;
+        }
+    }), [discountPercentage.code]);
+    
   return (
     <Card className="w-2/5 border-none h-auto self-start">
       <CardHeader>
@@ -100,7 +114,7 @@ const OrderSummary = () => {
             {discountAmount ? 
             <HoverCard>
                 <HoverCardTrigger asChild>
-                    <div className="flex space-x-2"><span>Discount</span><CircleAlert size={14} className="text-gray-500" /></div>
+                    <div className="flex space-x-2"><span>Discount ({discountPercentage.code})</span><CircleAlert size={14} className="text-orange-500" /></div>
                 </HoverCardTrigger>
                 <HoverCardContent>
                     <div>
@@ -167,6 +181,8 @@ const OrderSummary = () => {
       </CardHeader>
     </Card>
   );
-};
+});
+
+OrderSummary.displayName = "OrderSummary";
 
 export default OrderSummary;
