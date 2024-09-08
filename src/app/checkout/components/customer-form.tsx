@@ -10,16 +10,17 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createOrder, getCustomer } from "@/lib/http/api";
+import { v4 as uuidv4 } from 'uuid';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coins, CreditCard } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useQuery } from "@tanstack/react-query";
-import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Customer } from "@/types";
+import { Customer, OrderData } from "@/types";
 import AddAddress from "./add-address";
 import OrderSummary, { OrderSummaryHandle } from "./order-summary";
 import { useAppSelector } from "@/lib/store/hooks";
@@ -28,6 +29,7 @@ import { useSearchParams } from "next/navigation";
 const CustomerForm = () => {
   const orderSummaryRef = React.useRef<OrderSummaryHandle>(null);
   const searchParams = useSearchParams();
+  const idemPotencyKeyRef = React.useRef<string>('');
   const FormSchema = z.object({
     address: z.string({ required_error: "Please select an address" }),
     paymentMode: z.enum(["card", "cash"], {
@@ -48,22 +50,33 @@ const CustomerForm = () => {
     },
   });
 
+  const { mutate: placeOrder, isPending: isPlaceOrderPending } = useMutation({
+    mutationKey: ['order'],
+    mutationFn: async (data: OrderData) => {
+      
+      const idemPotencyKey = idemPotencyKeyRef.current ? idemPotencyKeyRef.current : (idemPotencyKeyRef.current = uuidv4() + customer?._id) ;
+      return await createOrder(data, idemPotencyKey);
+    },
+    retry: 3
+  });
+
   const handleSubmit = (data: z.infer<typeof FormSchema>) => {
     const tenantId = searchParams.get("tenantId");
     if(!tenantId) {
       alert("Please select a Restaurant"); // Todo: Add toast
       return;
     }
-    const orderData = {
+    const orderData: OrderData = {
       cart: cart.cartItems,
       couponCode: orderSummaryRef.current ? orderSummaryRef.current.getAppliedCouponCode() : "",
       tenantId,
-      customerId: customer?._id,
+      customerId: customer?._id!,
       comment: data.comment,
       address: data.address,
       paymentMode: data.paymentMode
     }
-    console.log("OrderData::", orderData);
+
+    placeOrder(orderData);
   };
 
   if (isLoading)
@@ -241,7 +254,7 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
-          <OrderSummary ref={orderSummaryRef} />
+          <OrderSummary ref={orderSummaryRef} isPlaceOrderPending={isPlaceOrderPending}/>
         </div>
       </form>
     </Form>

@@ -1,3 +1,5 @@
+import { CartItem } from "@/lib/store/features/cart/cart-slice";
+
 export type Tenant = {
     id: number | string;
     name: string;
@@ -80,4 +82,14 @@ export type Customer = {
     lastName: string;
     email: string;
     addresses: Address[];
+}
+
+export type OrderData = {
+    cart: CartItem[];
+    couponCode: string;
+    tenantId: string;
+    customerId: string;
+    comment: string;
+    address: string;
+    paymentMode: 'card' | 'cash';
 }

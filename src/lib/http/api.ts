@@ -1,3 +1,4 @@
+import { OrderData } from '@/types';
 import axios from 'axios';
 
 const api = axios.create({
@@ -14,3 +15,8 @@ const ORDER_SERVICE = '/api/order';
 export const getCustomer = () => api.get(`${ORDER_SERVICE}/customer`);
 export const addAddress = (customerId: string, payload: { address: string }) => api.patch(`${ORDER_SERVICE}/customer/addresses/${customerId}`, payload);
 export const validateCoupon = (payload: { code: string, tenantId: number }) => api.post(`${ORDER_SERVICE}/coupon/verify`, payload);
+export const createOrder = (payload: OrderData, idempotencyKey: string) => api.post(
+    `${ORDER_SERVICE}/orders`, payload, { 
+        headers: { 'Idempotency-Key': idempotencyKey } 
+    }
+);

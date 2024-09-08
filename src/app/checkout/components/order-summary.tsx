@@ -18,7 +18,12 @@ export interface OrderSummaryHandle {
   getAppliedCouponCode: () => string;
 }
 
-const OrderSummary = React.forwardRef<OrderSummaryHandle>((props, ref) => {
+type OrderSummaryProps = {
+  isPlaceOrderPending: boolean;
+}
+
+const OrderSummary = React.forwardRef<OrderSummaryHandle, OrderSummaryProps>((props, ref) => {
+  const {isPlaceOrderPending} = props;
     const [discountPercentage, setDiscountPercentage] = React.useState({ code: "", discount: 0 });
     const [discountError, setDiscountError] = React.useState("");
     const couponCodeRef = React.useRef<HTMLInputElement>(null);
@@ -164,10 +169,8 @@ const OrderSummary = React.forwardRef<OrderSummaryHandle>((props, ref) => {
           </div>
           {discountError && <div className="text-red-500">{discountError}</div>}
           <div className="text-right mt-6">
-            {/* <Button disabled={isPlaceOrderPending}> */}
-            <Button disabled={false}>
-              {/* {isPlaceOrderPending ? ( */}
-              {false ? (
+            <Button disabled={isPlaceOrderPending}>
+              {isPlaceOrderPending ? (
                 <span className="flex items-center gap-2">
                   <LoaderCircle className="animate-spin" />
                   <span>Please wait...</span>
