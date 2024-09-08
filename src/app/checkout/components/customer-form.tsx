@@ -55,7 +55,15 @@ const CustomerForm = () => {
     mutationFn: async (data: OrderData) => {
       
       const idemPotencyKey = idemPotencyKeyRef.current ? idemPotencyKeyRef.current : (idemPotencyKeyRef.current = uuidv4() + customer?._id) ;
-      return await createOrder(data, idemPotencyKey);
+      return await createOrder(data, idemPotencyKey).then(res => res.data);
+    },
+    onSuccess: (data: { paymentUrl: string }) => {
+      const { paymentUrl } = data;
+      if(paymentUrl) { // case - payment mode = card
+        window.location.href = paymentUrl
+        return;
+      }
+      // Todo - payment mode = cash
     },
     retry: 3
   });
