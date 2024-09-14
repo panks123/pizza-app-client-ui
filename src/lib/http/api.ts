@@ -20,3 +20,4 @@ export const createOrder = (payload: OrderData, idempotencyKey: string) => api.p
         headers: { 'Idempotency-Key': idempotencyKey } 
     }
 );
+export const getCustomerOrders = (currentPage: number, perPage: number) => api.get(`${ORDER_SERVICE}/orders/mine?page=${currentPage}&limit=${perPage}`);

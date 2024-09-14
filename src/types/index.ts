@@ -93,3 +93,21 @@ export type OrderData = {
     address: string;
     paymentMode: 'card' | 'cash';
 }
+
+export interface Order {
+    _id: string;
+    // cart: CartItem[];
+    customerId: string;
+    total: number;
+    discount: number;
+    taxes: number;
+    deliveryCharges: number;
+    address: string;
+    tenantId: string;
+    comment?: string;
+    paymentMode: string;
+    paymentStatus: string;
+    orderStatus: string;
+    paymentId?: string;
+    createdAt: string;
+}

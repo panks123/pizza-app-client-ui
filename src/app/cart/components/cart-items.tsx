@@ -30,10 +30,10 @@ const CartItems = () => {
             <ShoppingCart />
             <p>Your cart is empty! {' '}</p>
             <Link 
-                className='text-primary'
+                className='text-primary font-semibold'
                 href={`/?tenantId=${searchParams.get('tenantId')}`}
             >
-                Continue Shopping
+                Continue PizzoMotiiing
             </Link>
         </div>
     }
