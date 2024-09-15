@@ -97,7 +97,7 @@ export type OrderData = {
 export interface Order {
     _id: string;
     // cart: CartItem[];
-    customerId: string;
+    customerId: Customer;
     total: number;
     discount: number;
     taxes: number;

@@ -60,7 +60,7 @@ const Payment: React.FC<Props> = ({ searchParams: { success, orderId, tenantId }
                 <div className="flex items-center gap-2">
                     <LayoutDashboard />
                     <h2 className="text-base font-medium">Order reference: </h2>
-                    <Link href={`/order-status/${orderId}${tenantId ? `?tenantId=${tenantId}` : ""}`} className="text-primary underline">{orderId}</Link> {/* TODO */}
+                    <Link href={`/orders/${orderId}${tenantId ? `?tenantId=${tenantId}` : ""}`} className="text-primary underline">{orderId}</Link> {/* TODO */}
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     <LayoutDashboard />
