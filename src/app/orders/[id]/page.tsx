@@ -29,7 +29,7 @@ const OrderDetails = async ({ params }: { params: { id: string } }) => {
             <CardTitle>Order Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <TrackOrderStatus />
+            <TrackOrderStatus orderId={order._id} />
           </CardContent>
         </Card>
 

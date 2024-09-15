@@ -21,3 +21,5 @@ export const createOrder = (payload: OrderData, idempotencyKey: string) => api.p
     }
 );
 export const getCustomerOrders = (currentPage: number, perPage: number) => api.get(`${ORDER_SERVICE}/orders/mine?page=${currentPage}&limit=${perPage}`);
+
+export const getOrderStatus = (orderId: string) => api.get(`${ORDER_SERVICE}/orders/${orderId}?fields=orderStatus`);
