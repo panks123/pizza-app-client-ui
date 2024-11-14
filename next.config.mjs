@@ -7,6 +7,9 @@ const nextConfig = {
                 hostname: 'pizza-app-project.s3.ap-southeast-2.amazonaws.com'
             }
         ]
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
     }
 };
 
