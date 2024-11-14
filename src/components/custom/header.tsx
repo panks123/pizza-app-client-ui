@@ -18,7 +18,8 @@ const Header = async () => {
         }
     });
     if(!tenantsResponse.ok) {
-        throw new Error("Failed to fetch tenants")
+        // throw new Error("Failed to fetch tenants")
+        return <p>Failed to fetch tenants</p>
     }
     const tenants = await tenantsResponse.json();
     return (
