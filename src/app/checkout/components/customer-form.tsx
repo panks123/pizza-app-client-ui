@@ -23,12 +23,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Customer, OrderData } from "@/types";
 import AddAddress from "./add-address";
 import OrderSummary, { OrderSummaryHandle } from "./order-summary";
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useSearchParams } from "next/navigation";
+import { clearCart } from "@/lib/store/features/cart/cart-slice";
 
 const CustomerForm = () => {
   const orderSummaryRef = React.useRef<OrderSummaryHandle>(null);
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
   const idemPotencyKeyRef = React.useRef<string>('');
   const FormSchema = z.object({
     address: z.string({ required_error: "Please select an address" }),
@@ -63,6 +65,7 @@ const CustomerForm = () => {
         window.location.href = paymentUrl
         return;
       }
+      dispatch(clearCart());
       // Todo - payment mode = cash
     },
     retry: 3

@@ -32,7 +32,7 @@ const Header = async () => {
             <div className='flex items-center gap-4'>
                 <ul className='flex items-center font-medium space-x-4'>
                     <li className='hover:text-primary'><Link href={"/"}>Menu</Link></li>
-                    <li className='hover:text-primary'><Link href={"/"}>Orders</Link></li>
+                    <li className='hover:text-primary'><Link href={"/orders"}>Orders</Link></li>
                 </ul>
                 <CartCounter/>
                 <div className='flex items-center gap-x-1 ml-12'>
